@@ -2,7 +2,43 @@
 name = "kinetic-rs"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Gustavo Silveira <gustavo24gss@gmail.com>"]
+description = "A cross-platform accessibility I/O application"
 
 [dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+eframe = "0.22"
+egui = "0.22"
+dirs = "5.0"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.48", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+]}
+winapi = { version = "0.3", features = [
+    "winuser",
+    "windef",
+    "minwindef",
+    "shellapi",
+    "errhandlingapi",
+    "wincon",
+]}
+
+[target.'cfg(unix)'.dependencies]
+x11 = { version = "2.21", features = ["xlib"] }
+
+[lib]
+name = "kinetic"
+path = "src/lib.rs"
+
+[target.x86_64-pc-windows-gnu]
+linker = "x86_64-w64-mingw32-gcc"
+ar = "x86_64-w64-mingw32-gcc-ar"
+
+[target.x86_64-pc-windows-gnu.dependencies]
+windows-sys = { version = "0.48", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+]}

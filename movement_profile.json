@@ -1,0 +1,11 @@
+{
+  "min_tremor_speed": 0.0,
+  "max_tremor_speed": 129.00507644423118,
+  "avg_tremor_radius": 30.47812863475431,
+  "tremor_direction_changes": 7.26530612244898,
+  "min_precision_speed": 1.10703019804023,
+  "max_precision_speed": 304.4381403948257,
+  "precision_radius": 135.85194819028405,
+  "min_fast_speed": 115.35937350236958,
+  "movement_threshold": 209.89875694859765
+}
