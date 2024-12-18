@@ -1,21 +1,15 @@
-#[cfg(windows)]
-use std::error::Error;
 use windows_sys::Win32::Foundation::POINT;
-use windows_sys::Win32::UI::WindowsAndMessaging::{
-    GetCursorPos, SetCursorPos,
-};
+use windows_sys::Win32::UI::WindowsAndMessaging::{GetCursorPos, SetCursorPos};
 
-pub struct WindowsMouseController {
-    // Windows doesn't need persistent state like X11 does
-}
-
-impl WindowsMouseController {
-    pub fn new() -> Self {
-        Self {}
-    }
-}
+pub struct WindowsMouseController;
 
 impl super::MouseController for WindowsMouseController {
+    type Error = ();
+
+    fn new() -> Self {
+        Self
+    }
+
     fn get_position(&self) -> (i32, i32) {
         unsafe {
             let mut point = POINT { x: 0, y: 0 };
@@ -24,20 +18,23 @@ impl super::MouseController for WindowsMouseController {
         }
     }
 
-    fn set_position(&mut self, x: i32, y: i32) -> Result<(), Box<dyn Error>> {
+    fn set_position(&mut self, x: i32, y: i32) -> Result<(), Self::Error> {
         unsafe {
             if SetCursorPos(x, y) == 0 {
-                return Err("Failed to set cursor position".into());
+                return Err(());
             }
         }
         Ok(())
     }
 
-    fn hook_mouse(&mut self) -> Result<(), Box<dyn Error>> {
+    fn hook_mouse(&mut self) -> Result<(), Self::Error> {
+        // Not implemented.
         Ok(())
     }
 
-    fn unhook_mouse(&mut self) -> Result<(), Box<dyn Error>> {
+    fn unhook_mouse(&mut self) -> Result<(), Self::Error> {
+        // Not implemented.
         Ok(())
     }
 }
+
