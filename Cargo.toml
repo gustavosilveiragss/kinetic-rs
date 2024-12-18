@@ -12,11 +12,11 @@ eframe = "0.22"
 egui = "0.22"
 dirs = "5.0"
 
-[target.'cfg(windows)'.dependencies]
+[target.'cfg(target_os = "windows")'.dependencies]
 windows-sys = { version = "0.48", features = [
     "Win32_Foundation",
     "Win32_UI_WindowsAndMessaging",
-]}
+] }
 winapi = { version = "0.3", features = [
     "winuser",
     "windef",
@@ -24,10 +24,13 @@ winapi = { version = "0.3", features = [
     "shellapi",
     "errhandlingapi",
     "wincon",
-]}
+] }
 
-[target.'cfg(unix)'.dependencies]
+[target.'cfg(target_os = "linux")'.dependencies]
 x11 = { version = "2.21", features = ["xlib"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+core-graphics = "0.22.2"
 
 [lib]
 name = "kinetic"
@@ -41,4 +44,5 @@ ar = "x86_64-w64-mingw32-gcc-ar"
 windows-sys = { version = "0.48", features = [
     "Win32_Foundation",
     "Win32_UI_WindowsAndMessaging",
-]}
+] }
+

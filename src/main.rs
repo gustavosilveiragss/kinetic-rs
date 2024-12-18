@@ -1,8 +1,11 @@
-use std::sync::{Arc, Mutex, atomic::{AtomicBool, Ordering}};
+use eframe::egui;
+use kinetic::{Config, MouseSmoother, MouseState};
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc, Mutex,
+};
 use std::thread;
 use std::time::Duration;
-use eframe::egui;
-use kinetic::{Config, MouseState, MouseSmoother};
 
 struct KineticApp {
     config: Arc<Mutex<Config>>,
@@ -19,10 +22,10 @@ impl KineticApp {
         let config_clone = config.clone();
         let mouse_state_clone = mouse_state.clone();
         let is_active_clone = is_active.clone();
-        
+
         thread::spawn(move || {
             let mut smoother = MouseSmoother::new(Config::default());
-            
+
             loop {
                 if !is_active_clone.load(Ordering::Relaxed) {
                     thread::sleep(Duration::from_millis(100));
@@ -34,7 +37,7 @@ impl KineticApp {
                 }
 
                 smoother.update();
-                
+
                 if let Ok(mut state) = mouse_state_clone.lock() {
                     *state = smoother.get_state();
                 }
@@ -55,9 +58,16 @@ impl eframe::App for KineticApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             let mut config = self.config.lock().unwrap();
-            
+
             let active = self.is_active.load(Ordering::Relaxed);
-            if ui.button(if active { "Disable Smoothing" } else { "Enable Smoothing" }).clicked() {
+            if ui
+                .button(if active {
+                    "Disable Smoothing"
+                } else {
+                    "Enable Smoothing"
+                })
+                .clicked()
+            {
                 self.is_active.store(!active, Ordering::Relaxed);
             }
 
@@ -101,3 +111,4 @@ fn main() -> Result<(), eframe::Error> {
         Box::new(|cc| Box::new(KineticApp::new(cc))),
     )
 }
+
